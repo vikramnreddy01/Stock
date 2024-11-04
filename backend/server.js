@@ -5,10 +5,12 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const app = express();
 const PORT = 5000;
-
+const axios =require('axios')
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Rest of your existing server code...
 
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/StockDB', { useNewUrlParser: true, useUnifiedTopology: true })
@@ -250,6 +252,82 @@ app.get('/api/stock/:symbol', async (req, res) => {
   }
 });
 
+// Fetch Transactions by User Email
+app.get('/api/transactions/:userEmail', async (req, res) => {
+  const { userEmail } = req.params;
+
+  try {
+    const transactions = await Transaction.find({ userEmail });
+    res.json(transactions);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching transactions' });
+  }
+});
+
+// Delete Transaction by ID
+app.delete('/api/transactions/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const transaction = await Transaction.findByIdAndDelete(id);
+    if (!transaction) return res.status(404).json({ message: 'Transaction not found' });
+    
+    res.json({ message: 'Transaction deleted successfully!' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting transaction' });
+  }
+});
+
+const topStocks = [
+  'AAPL', 'MSFT', 'GOOGL', 'AMZN', 'FB',
+  'TSLA', 'NVDA', 'BRK.B', 'JPM', 'JNJ',
+  'V', 'PG', 'UNH', 'HD', 'MA',
+  'DIS', 'PYPL', 'ADBE', 'CMCSA', 'NFLX',
+  'KO', 'VZ', 'PFE', 'MRK', 'ABT'
+];
+async function fetchStockData() {
+  const symbols = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'FB', 'TSLA', 'NVDA', 'BRK.B', 'JPM', 'JNJ', 'V', 'PG', 'UNH', 'HD', 'MA', 'DIS', 'PYPL', 'ADBE', 'CMCSA', 'NFLX', 'KO', 'VZ', 'PFE', 'MRK', 'ABT'];
+  const promises = symbols.map(async (symbol) => {
+      try {
+          const response = await axios.get(`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${symbol}&apikey=5J63HYIUGKV572IR`);
+          const data = response.data['Time Series (Daily)'];
+          
+          // Check if data is undefined or null
+          if (!data) {
+              console.error(`No data received for ${symbol}. Response:`, response.data);
+              return;
+          }
+
+          const filteredData = Object.keys(data).filter(date => new Date(date) > new Date('2024-11-01')).map(date => {
+              return {
+                  symbol,
+                  date,
+                  open: parseFloat(data[date]['1. open']),
+                  high: parseFloat(data[date]['2. high']),
+                  low: parseFloat(data[date]['3. low']),
+                  close: parseFloat(data[date]['4. close']),
+                  volume: parseInt(data[date]['5. volume']),
+              };
+          });
+
+          // Save to MongoDB
+          await Stock.insertMany(filteredData);
+          console.log(`Successfully fetched and saved data for ${symbol}`);
+      } catch (error) {
+          console.error(`Error fetching data for ${symbol}:`, error.message);
+      }
+  });
+
+  await Promise.all(promises);
+}
+
+// Connect to MongoDB
+mongoose.connect('mongodb://localhost:27017/StockDB', { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(async () => {
+    console.log('MongoDB connected');
+    fetchStockData();
+  })
+  .catch(err => console.log(err));
 
 // Start the server
 app.listen(PORT, () => {
