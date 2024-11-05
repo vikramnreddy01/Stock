@@ -4,12 +4,14 @@ const axios = require('axios');
 
 const app = express();
 const PORT = 5001;
+const uri = 'mongodb+srv://vikram:vJ5XCy2wWxNsS498@stockdb.2zl6a.mongodb.net/?retryWrites=true&w=majority&appName=StockDB';
 
-// MongoDB connection
-mongoose.connect('mongodb://localhost:27017/StockDB')
-  .then(() => console.log('MongoDB connected'))
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(async () => {
+    console.log('MongoDB connected');
+    
+  })
   .catch(err => console.log(err));
-
 // Define Stock Schema
 const stockSchema = new mongoose.Schema({
   symbol: String,
@@ -86,14 +88,9 @@ const fetchAndStoreHistoricData = async (symbol) => {
   }
 };
 
-// Route to load data for the top 25 stocks
-app.get('/api/load-top-stocks', async (req, res) => {
-  console.log('Fetching stock data for top 25 stocks...');
   for (const symbol of topStocks) {
-    await fetchAndStoreHistoricData(symbol);
+   fetchAndStoreHistoricData(symbol);
   }
-  res.send({ message: 'Stock data for top 25 stocks has been loaded into the database.' });
-});
 
 // Start the server
 app.listen(PORT, () => {

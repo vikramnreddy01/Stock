@@ -5,15 +5,19 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const app = express();
 const PORT = 5000;
-const axios =require('axios')
+const axios = require('axios');
+
 // Middleware
 app.use(cors());
 app.use(express.json());
 
+const uri = 'mongodb+srv://vikram:vJ5XCy2wWxNsS498@stockdb.2zl6a.mongodb.net/StockDB?retryWrites=true&w=majority&appName=StockDB';
 
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/StockDB', { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('MongoDB connected'))
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(async () => {
+    console.log('MongoDB connected');
+    fetchStockData();
+  })
   .catch(err => console.log(err));
 
 // Schemas and Models
@@ -42,6 +46,8 @@ const transactionSchema = new mongoose.Schema({
   date: { type: Date, default: Date.now }, 
   type: { type: String, required: true }, 
 });
+
+// Define other schemas and routes...
 
 
 const contactSchema = new mongoose.Schema({
@@ -437,14 +443,6 @@ async function fetchStockData() {
     }
   }
 }
-
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/StockDB', { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(async () => {
-    console.log('MongoDB connected');
-    fetchStockData()
-  })
-  .catch(err => console.log(err));
 
 
 // Start the server
