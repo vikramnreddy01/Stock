@@ -1,7 +1,15 @@
 import React from 'react';
 import { ReactTyped as Typed } from 'react-typed';
+import { useNavigate } from 'react-router-dom';
+
 
 const Hero = () => {
+  const navigate = useNavigate(); // Initialize useNavigate
+
+const handleGetStarted = () => {
+    navigate('/login'); // Navigate to the login page
+  };
+  
   return (
     <div className='text-white'>
       <div className='max-w-[800px] mt-[-96px] w-full h-screen mx-auto text-center flex flex-col justify-center'>
@@ -26,12 +34,15 @@ const Hero = () => {
         <p className='md:text-2xl text-xl font-bold text-gray-500 mb-8'>
           Track, analyze, and optimize your portfolio to maximize gains and minimize risks.
         </p>
-        <button className='bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black'>
-          Get Started
+        <button 
+            className='bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black' 
+            onClick={handleGetStarted} // Attach the click handler
+        >
+            Get Started
         </button>
       </div>
     </div>
   );
 };
 
-export default Hero;
+export default Hero

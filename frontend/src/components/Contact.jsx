@@ -22,16 +22,16 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/contact', formData); // Updated endpoint
-      setSuccessMessage(response.data);
-      setErrorMessage('');
-      // Reset form after submission
-      setFormData({ name: '', email: '', message: '' });
+        const response = await axios.post('http://localhost:5000/api/contact', formData); // Updated endpoint
+        setSuccessMessage(response.data.message); // Use response.data.message
+        setErrorMessage('');
+        // Reset form after submission
+        setFormData({ name: '', email: '', message: '' });
     } catch (error) {
-      setErrorMessage('Error sending message. Please try again later.');
-      setSuccessMessage('');
+        setErrorMessage('Error sending message. Please try again later.');
+        setSuccessMessage('');
     }
-  };
+};
 
   return (
     <div className="max-w-[1240px] mx-auto p-8">

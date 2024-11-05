@@ -1,6 +1,12 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const About = () => {
+  const navigate = useNavigate(); // Initialize useNavigate
+
+const handleGetStarted = () => {
+    navigate('/login'); // Navigate to the login page
+  };
   return (
     <div className="max-w-[1240px] mx-auto p-8">
     
@@ -35,12 +41,12 @@ const About = () => {
         <p className="text-gray-400 mb-4">
           Whether you're a seasoned investor or just starting out, we invite you to join our community. Explore our platform, learn from our resources, and connect with other like-minded investors.
         </p>
-        <a 
-          href="/signup" 
-          className="inline-block bg-[#00df9a] text-gray-900 font-bold py-2 px-4 rounded hover:bg-[#00df9a]/80 transition duration-300"
+        <button 
+            className='bg-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto py-3 text-black' 
+            onClick={handleGetStarted} // Attach the click handler
         >
-          Get Started
-        </a>
+            Get Started
+        </button>
       </div>
     </div>
   );
