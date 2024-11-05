@@ -25,7 +25,7 @@ const Stock = mongoose.model('Stock', stockSchema);
 
 // Array of top 25 stock symbols
 const topStocks = [
-  'GOOGL', 'AMZN', 'FB', 
+  'AAPL','MSFT','GOOGL', 'AMZN', 'FB', 
   'TSLA', 'NVDA', 'BRK.B', 'JPM', 'JNJ',
   'V', 'PG', 'UNH', 'HD', 'MA',
   'DIS', 'PYPL', 'ADBE', 'CMCSA', 'NFLX',

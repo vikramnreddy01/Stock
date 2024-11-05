@@ -15,11 +15,11 @@ const LandingPage = () => {
   const [stockData, setStockData] = useState([]);
   const [selectedStock, setSelectedStock] = useState('AAPL'); // Default stock
   const [stocksList, setStocksList] = useState([]); // List of stocks
-  const [dateRange, setDateRange] = useState('1m'); // Default date range
+  const [dateRange, setDateRange] = useState('1y'); // Default date range
 
   // Define the top 25 stocks
   const topStocks = [
-    'AAPL', 'MSFT', 'GOOGL', 'AMZN', 'FB',
+    'AAPL', 'MSFT', 'GOOGL', 'AMZN',
     'TSLA', 'NVDA', 'BRK.B', 'JPM', 'JNJ',
     'V', 'PG', 'UNH', 'HD', 'MA',
     'DIS', 'PYPL', 'ADBE', 'CMCSA', 'NFLX',
