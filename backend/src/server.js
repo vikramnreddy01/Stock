@@ -4,7 +4,7 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const app = express();
-const PORT = 5000;
+const PORT = 443;
 const axios = require('axios');
 
 // Middleware
